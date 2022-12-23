@@ -2,7 +2,6 @@ from typing import Callable
 
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
-
 from fastapi_responses.utils import extract_exceptions, write_response
 
 
@@ -16,6 +15,12 @@ def custom_openapi(app: FastAPI) -> Callable:
             description=app.description,
             routes=app.routes,
         )
+        openapi_schema["components"]["schemas"]["HTTPException"] = {
+            "title": "HTTPExceptionObj",
+            "type": "object",
+            "properties": {"detail": {"title": "Error Detail", "type": "string"}},
+        }
+
         for route in app.routes:
             if getattr(route, "include_in_schema", None):
                 for exception in extract_exceptions(route):

@@ -69,5 +69,6 @@ def write_response(api_schema: dict, route: APIRoute, exc: HTTPException) -> Non
         status_code = str(exc.status_code)
         if status_code not in api_schema["paths"][path][method]["responses"]:
             api_schema["paths"][path][method]["responses"][status_code] = {
-                "description": exc.detail
+                "description": exc.detail,
+                "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPException"}}},
             }
